@@ -68,7 +68,7 @@ public class DuoMfaAuthenticator implements Authenticator {
     }
 
     private Response createDuoForm(AuthenticationFlowContext context, String error) {
-        String sig_request = DuoWeb.signRequest(duoIkey(context), duoSkey(context), duoAkey(context), context.getUser().getUsername());
+        String sig_request = DuoWeb.signRequest(duoIkey(context), duoSkey(context), duoAkey(context), duoUsername(context));
         LoginFormsProvider form = context.form()
                 .setAttribute("sig_request", sig_request)
                 .setAttribute("apihost", duoApihost(context));
@@ -124,8 +124,9 @@ public class DuoMfaAuthenticator implements Authenticator {
             context.failureChallenge(AuthenticationFlowError.INVALID_CREDENTIALS, createDuoForm(context, ex.getMessage()));
             return;
         }
-        if (!authenticated_username.equals(context.getUser().getUsername())) {
-            String error = "Wrong DUO user returned: " + authenticated_username + " (expected " + context.getUser().getUsername() + ")";
+        String username = duoUsername(context);
+        if (!authenticated_username.equals(username)) {
+            String error = "Wrong DUO user returned: " + authenticated_username + " (expected " + username + ")";
             context.failureChallenge(AuthenticationFlowError.INVALID_CREDENTIALS, createDuoForm(context, error));
             return;
         }
@@ -160,6 +161,21 @@ public class DuoMfaAuthenticator implements Authenticator {
         if (config == null) return "";
         String value = String.valueOf(config.getConfig().get(PROP_GROUPS));
         if (value.equals("null")) return "";
+        return value;
+    }
+    private String duoUsername(AuthenticationFlowContext context) {
+        AuthenticatorConfigModel config = context.getAuthenticatorConfig();
+        String username = context.getUser().getUsername();
+        if (config == null) return username;
+        String name = String.valueOf(config.getConfig().get(PROP_USERNAME));
+        if (name.equals("")){
+            return username;
+        }
+        String value = context.getUser().getFirstAttribute(name);
+        if (value == null){
+            logger.warnf("Unable to get user's %s attribute, using fallback to username attribute with value %s", name, username);
+            return username;
+        }
         return value;
     }
 

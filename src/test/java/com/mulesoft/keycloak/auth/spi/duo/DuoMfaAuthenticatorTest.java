@@ -22,7 +22,7 @@ public class DuoMfaAuthenticatorTest {
     @Test
     public void testAuthenticate() {
         UserModel u = mock(UserModel.class);
-        when(u.getUsername()).thenReturn("username");
+        when(u.getFirstAttribute(anyString())).thenReturn("username");
 
         LoginFormsProvider lfp = mock(LoginFormsProvider.class);
         when(lfp.setAttribute(anyString(), any())).thenReturn(lfp);

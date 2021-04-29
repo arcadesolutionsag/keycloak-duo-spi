@@ -35,6 +35,7 @@ public class DuoMfaAuthenticatorFactory implements AuthenticatorFactory{
     public static final String PROP_AKEY = "duomfa.akey";
     public static final String PROP_APIHOST = "duomfa.apihost";
     public static final String PROP_GROUPS = "duomfa.groups";
+    public static final String PROP_USERNAME = "duomfa.username";
 
     @Override
     public String getId() {
@@ -102,6 +103,13 @@ public class DuoMfaAuthenticatorFactory implements AuthenticatorFactory{
         groups.setType(ProviderConfigProperty.STRING_TYPE);
         groups.setHelpText("Comma separated list of groups that require Duo (optional)");
         configProperties.add(groups);
+
+        ProviderConfigProperty username = new ProviderConfigProperty();
+        username.setName(PROP_USERNAME);
+        username.setLabel("Username attribute");
+        username.setType(ProviderConfigProperty.STRING_TYPE);
+        username.setHelpText("Name of the user model's alternative attribute which will be presented to duo as the username (optional, using 'username' by default)");
+        configProperties.add(username);
     }
 
     @Override
