@@ -15,7 +15,7 @@ $ mvn clean test install
 (assumes keycloak is installed to `/opt/keycloak`)
 ```
 $ cp target/keycloak-duo-spi-jar-with-dependencies.jar /opt/keycloak/standalone/deployments/
-$ cp src/main/duo-mfa.ftl /opt/keycloak/themes/base/login/duo-mfa.ftl
+$ cp src/main/resources/duo-mfa.ftl /opt/keycloak/themes/base/login/duo-mfa.ftl
 # restart keycloak
 ```
 ## Configure
@@ -29,7 +29,7 @@ Since you can't modify the default Authentication Flows, make a copy of Browser.
 
 ![flow-example](https://user-images.githubusercontent.com/1660470/39064512-9eaf9bf0-4483-11e8-947d-529578a1c44d.png)
 
-When you hit `Config` you can enter your Duo ikey, skey, and apihost (get these from duo.com by adding a *Web SDK* app). 
+When you hit `Config` you can enter your Duo ikey, skey, and apihost (get these from duo.com by adding a *Web SDK* app).
 
 Then make sure to bind your Copy of Browser flow to the Browser Flow (on the Bindings tab).
 
